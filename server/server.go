@@ -30,17 +30,16 @@ func main() {
 
 	http.HandleFunc("/cotacao", BuscaCotacaoHandler)
 
-	log.Println("Starting server on port 8080")
 	http.ListenAndServe("localhost:8080", nil)
 
 }
 
 func BuscaCotacaoHandler(w http.ResponseWriter, r *http.Request) {
 
-	ctxAPI, cancel := context.WithTimeout(context.Background(), 200 *time.Millisecond)
+	ctxAPI, cancel := context.WithTimeout(context.Background(), 200*time.Millisecond)
 	defer cancel()
 
-	ctxDB, cancel := context.WithTimeout(context.Background(), 10 *time.Millisecond)
+	ctxDB, cancel := context.WithTimeout(context.Background(), 10*time.Millisecond)
 	defer cancel()
 
 	cotacao, error := BuscaCotacao(ctxAPI, "USD-BRL")
@@ -54,13 +53,13 @@ func BuscaCotacaoHandler(w http.ResponseWriter, r *http.Request) {
 
 	// armazenar no banco de dados a cotação
 	PreparaDB := AbreConexaoDB()
-	err := insertCotacao(PreparaDB,cotacao.Usdbrl.Code + "-" + cotacao.Usdbrl.Codein, cotacao.Usdbrl.Bid, ctxDB)
+	err := insertCotacao(PreparaDB, cotacao.Usdbrl.Code+"-"+cotacao.Usdbrl.Codein, cotacao.Usdbrl.Bid, ctxDB)
 	if err != nil {
 		panic(err)
 	}
 }
 
-func RetornaCotacao (w http.ResponseWriter, r *http.Request, cotacao Cotacao) {
+func RetornaCotacao(w http.ResponseWriter, r *http.Request, cotacao Cotacao) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 
@@ -92,7 +91,7 @@ func BuscaCotacao(ctx context.Context, moeda string) (Cotacao, error) {
 	return cotacao, nil
 }
 
-func AbreConexaoDB () *sql.DB {
+func AbreConexaoDB() *sql.DB {
 	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/goexpert")
 	if err != nil {
 		panic(err)
