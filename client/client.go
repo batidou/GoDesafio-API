@@ -45,6 +45,6 @@ func Salva(cotacao string) {
 	// escreve no arquivo
 	_, err = f.WriteString(fmt.Sprintf("Dólar: %s", cotacao))
 	if err != nil {
-
+		panic(err)
 	}
 }
