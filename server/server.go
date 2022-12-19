@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	_ "github.com/go-sql-driver/mysql"
-	"log"
 	"net/http"
 	"time"
 )
@@ -85,7 +84,7 @@ func BuscaCotacao(ctx context.Context, moeda string) (Cotacao, error) {
 	}
 	defer res.Body.Close()
 
-	if err := json.NewDecoder(res.Body).Decode(&cotacao); err != nil {
+	if err = json.NewDecoder(res.Body).Decode(&cotacao); err != nil {
 		return cotacao, err
 	}
 	return cotacao, nil
@@ -104,8 +103,6 @@ func insertCotacao(db *sql.DB, moeda string, valorcotacao string, ctx context.Co
 
 	stmt, err := db.Prepare("INSERT INTO Cotacao (moeda, valorcotacao, datahora) values (?, ?, ?)")
 	if err != nil {
-		log.Println("Erro ao preparar a query")
-		log.Printf("Erro: %s", err)
 		return err
 	}
 	defer db.Close()
